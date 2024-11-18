@@ -10,6 +10,8 @@ import os
 
 app = FastAPI()
 
+
+load_dotenv()
 # 定義一個資料模型
 
 
@@ -73,6 +75,16 @@ async def add_user(user: userList):
 async def matching_id(user: userList):
     idNumber = user.idNumber
     result = collection.find_one({"idNumber": idNumber})
+    if result:
+        result['_id'] = str(result['_id'])  # 轉換 ObjectId
+        return result
+    else:
+        raise HTTPException(status_code=404, detail="未找到符合的 ID")
+    
+@app.get("/searchLineID/")
+async def matching_id(user: userList):
+    lineId = user.lineId
+    result = collection.find_one({"lineId": lineId})
     if result:
         result['_id'] = str(result['_id'])  # 轉換 ObjectId
         return result
