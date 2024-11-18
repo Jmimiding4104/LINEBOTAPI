@@ -113,6 +113,8 @@ async def link_line_id(user: userList):
             return {"message": "Line ID 已成功綁定到現有帳號"}
         else:
             raise HTTPException(status_code=404, detail="未找到符合的 ID")
+    else:
+        raise HTTPException(status_code=400, detail="無參加此活動~")
 
 # 更新++
 @app.put("/add/{item}", response_model=userList)
