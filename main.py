@@ -121,7 +121,7 @@ async def add_item(item: str, data: userList):
         raise HTTPException(status_code=400, detail="無效的欄位名稱")
 
     update_result = collection.find_one_and_update(
-        {"idNumber": data.idNumber},
+        {"lineId": data.lineId},
         {"$inc": {item: 1}},  # 動態更新指定欄位
         return_document=True  # 返回更新後的文件
     )
