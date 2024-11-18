@@ -94,17 +94,25 @@ async def matching_id(user: userList):
     
 @app.post("/linkLineID/")
 async def link_line_id(user: userList):
+    idNumber = user.idNumber
     lineId = user.lineId
     
-    result = collection.find_one({"lineId": lineId})
-    if result:
+    resultLineId = collection.find_one({"lineId": lineId})
+    resultIdNumber = collection.find_one({"idNumber": idNumber})
+    
+    if resultLineId:
         raise HTTPException(status_code=400, detail="該 Line ID 已經存在，無法重複註冊")
-    else:
-        user_dict = user.dict(by_alias=True)  # 將用戶物件轉為字典
-        user_dict["lineId"] = lineId  # 確保有 lineId 欄位
-        inserted_result = collection.insert_one(user_dict)
-        user_dict["_id"] = str(inserted_result.inserted_id)  # 轉換 ObjectId
-        return user_dict  # 返回新建立的資料
+    if resultIdNumber:
+        # 如果已經有相同的 idNumber，更新 lineId
+        update_result = collection.update_one(
+            {"idNumber": idNumber},  # 查找有相同 idNumber 的記錄
+            {"$set": {"lineId": lineId}}  # 設置新的 lineId
+        )
+        
+        if update_result.matched_count > 0:
+            return {"message": "Line ID 已成功綁定到現有帳號"}
+        else:
+            raise HTTPException(status_code=404, detail="未找到符合的 ID")
 
 # 更新++
 @app.put("/add/{item}", response_model=userList)
