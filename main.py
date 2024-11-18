@@ -90,6 +90,21 @@ async def matching_id(user: userList):
         return result
     else:
         raise HTTPException(status_code=404, detail="未找到符合的 ID")
+    
+    
+@app.post("/linkLineID/")
+async def link_line_id(user: userList):
+    lineId = user.lineId
+    
+    result = collection.find_one({"lineId": lineId})
+    if result:
+        raise HTTPException(status_code=400, detail="該 Line ID 已經存在，無法重複註冊")
+    else:
+        user_dict = user.dict(by_alias=True)  # 將用戶物件轉為字典
+        user_dict["lineId"] = lineId  # 確保有 lineId 欄位
+        inserted_result = collection.insert_one(user_dict)
+        user_dict["_id"] = str(inserted_result.inserted_id)  # 轉換 ObjectId
+        return user_dict  # 返回新建立的資料
 
 # 更新++
 @app.put("/add/{item}", response_model=userList)
@@ -118,3 +133,5 @@ async def delete_todo(id: str):
         raise HTTPException(status_code=200, detail="刪除成功")
     else:
         raise HTTPException(status_code=404, detail="請確認 ID")
+
+#uvicorn main:app --host 0.0.0.0 --port 8000
