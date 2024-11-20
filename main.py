@@ -53,9 +53,12 @@ async def connect_to_mongo():
 # 開始時執行確認函式
 
 
-@app.on_event("startup")
-async def startup_event():
+async def lifespan(app: FastAPI):
+    # 在應用啟動時執行
     await connect_to_mongo()
+    yield
+    # 在應用關閉時執行
+    client.close()
 
 
 @app.post("/add_user/", response_model=userList)
