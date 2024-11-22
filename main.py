@@ -59,6 +59,10 @@ async def lifespan(app: FastAPI):
     yield
     # 在應用關閉時執行
     client.close()
+    
+@app.get("/keep/")
+async def keep():
+    return "OK"
 
 
 @app.post("/add_user/", response_model=userList)
