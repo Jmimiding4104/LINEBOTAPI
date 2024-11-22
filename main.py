@@ -43,6 +43,13 @@ collection = database[collectionName]
 
 # 確認資料庫連結成功與否
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 允許的來源，可以是特定的域名，如 ["https://example.com"]
+    allow_credentials=True,
+    allow_methods=["*"],  # 允許的 HTTP 方法，如 ["GET", "POST"]
+    allow_headers=["*"],  # 允許的 HTTP 標頭，如 ["Authorization", "Content-Type"]
+)
 
 async def connect_to_mongo():
     try:
@@ -154,11 +161,5 @@ async def delete_todo(id: str):
         raise HTTPException(status_code=404, detail="請確認 ID")
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # 允許的來源，可以是特定的域名，如 ["https://example.com"]
-    allow_credentials=True,
-    allow_methods=["*"],  # 允許的 HTTP 方法，如 ["GET", "POST"]
-    allow_headers=["*"],  # 允許的 HTTP 標頭，如 ["Authorization", "Content-Type"]
-)
+
 #uvicorn main:app --host 0.0.0.0 --port 8000
