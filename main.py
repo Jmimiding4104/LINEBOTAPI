@@ -165,7 +165,7 @@ async def logout(user: userList):
 
     result = collection.find_one_and_update(
         {"lineId": user.lineId},
-        {"$set": {"lineId": none}},  # 動態更新指定欄位
+        {"$set": {"lineId": None}},  # 動態更新指定欄位
         return_document=True  # 返回更新後的文件
     )
     
