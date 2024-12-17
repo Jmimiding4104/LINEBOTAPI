@@ -117,7 +117,7 @@ async def link_line_id(user: userList):
     resultIdNumber = collection.find_one({"idNumber": idNumber})
     
     if resultLineId:
-        raise HTTPException(status_code=400, detail="該 Line ID 已經存在，無法重複註冊")
+        raise HTTPException(status_code=400, detail="該 Line ID 已經存在，無法重複登入，請聯絡管理員!")
     if resultIdNumber:
         # 如果已經有相同的 idNumber，更新 lineId
         update_result = collection.update_one(
