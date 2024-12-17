@@ -160,6 +160,19 @@ async def delete_todo(id: str):
     else:
         raise HTTPException(status_code=404, detail="請確認 ID")
 
+@app.delete("/logout", response_model=userList)
+async def logout(user: userList):
 
-
+    result = collection.find_one_and_update(
+        {"lineId": user.lineId},
+        {"$set": {"lineId": none}},  # 動態更新指定欄位
+        return_document=True  # 返回更新後的文件
+    )
+    
+    if result:
+        raise HTTPException(status_code=200, detail="刪除成功")
+    else:
+        raise HTTPException(status_code=404, detail="刪除失敗，請聯絡管理員")
+        
+    
 #uvicorn main:app --host 0.0.0.0 --port 8000
